@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>no.ks.fiks.pom</groupId>
+        <artifactId>fiks-ekstern-super-pom</artifactId>
+        <version>0.0.3</version>
+    </parent>
+
+    <groupId>no.ks.fiks</groupId>
+    <artifactId>kryptering</artifactId>
+    <version>${revision}${changelist}</version>
+    <packaging>pom</packaging>
+
+    <name>Kryptering</name>
+    <description>Bibliotek for kryptering og dekryptering</description>
+    <url>https://github.com/ks-no/kryptering</url>
+
+    <scm>
+        <connection>scm:git:git@github.com:ks-no/kryptering.git</connection>
+        <developerConnection>scm:git:git@github.com:ks-no/kryptering.git</developerConnection>
+        <url>https://github.com/ks-no/kryptering</url>
+    </scm>
+
+    <properties>
+        <changelist>-SNAPSHOT</changelist>
+        <revision>1.0.3</revision>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <commons-io.version>2.6</commons-io.version>
+        <bouncycastle.version>1.56</bouncycastle.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>
