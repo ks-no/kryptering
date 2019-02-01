@@ -11,32 +11,20 @@ public class KSKeyStoreLoader {
 
     private KeyStore keystore;
 
-    public KSKeyStoreLoader(String keystorefile, String storepassword) {
-        InputStream keystoreStream = null;
-        try {
-            if(new File(keystorefile).exists())
-                keystoreStream = new FileInputStream(keystorefile);
-            else {
-                keystoreStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(keystorefile);
-            }
-            keystore = KeyStore.getInstance("JCEKS");
-            keystore.load(keystoreStream, storepassword.toCharArray());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
+    public KSKeyStoreLoader(String keystorePath, char[] password) {
+        this(keystorePath, password, "JCEKS");
     }
 
-    public KSKeyStoreLoader(String keystorefile, String storepassword, String keystoreType) {
-        InputStream keystoreStream = null;
+    public KSKeyStoreLoader(String keystorePath, char[] password, String keystoreType) {
         try {
-            if(new File(keystorefile).exists())
-                keystoreStream = new FileInputStream(keystorefile);
-            else {
-                keystoreStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(keystorefile);
+            InputStream keystoreStream;
+            if (new File(keystorePath).exists()) {
+                keystoreStream = new FileInputStream(keystorePath);
+            } else {
+                keystoreStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(keystorePath);
             }
             keystore = KeyStore.getInstance(keystoreType);
-            keystore.load(keystoreStream, storepassword.toCharArray());
+            keystore.load(keystoreStream, password);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -47,15 +35,15 @@ public class KSKeyStoreLoader {
         return keystore;
     }
 
-    public PrivateKey getPrivateKey(String alias, String password){
+    public PrivateKey getPrivateKey(String alias, char[] password) {
         try {
-            return (PrivateKey) keystore.getKey(alias, password.toCharArray());
+            return (PrivateKey) keystore.getKey(alias, password);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public X509Certificate getPublicKey(String alias){
+    public X509Certificate getPublicKey(String alias) {
         try {
             return (X509Certificate) keystore.getCertificate(alias);
         } catch (Exception e) {
