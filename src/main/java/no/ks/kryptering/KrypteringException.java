@@ -1,5 +1,6 @@
 package no.ks.kryptering;
 
+@SuppressWarnings("WeakerAccess")
 public class KrypteringException extends RuntimeException {
 
     public KrypteringException() {

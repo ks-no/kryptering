@@ -11,6 +11,7 @@ import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.cms.*;
 import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
 import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
+import org.bouncycastle.cms.jcajce.JceKeyTransRecipient;
 import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.OutputEncryptor;
@@ -25,13 +26,16 @@ import java.security.Security;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 
+@SuppressWarnings("WeakerAccess")
 public class CMSDataKryptering {
 
+    private final Provider defaultProvider;
     private final ASN1ObjectIdentifier cmsEncryptionAlgorithm;
     private final AlgorithmIdentifier keyEncryptionScheme;
 
     public CMSDataKryptering() {
-        Security.addProvider(new BouncyCastleProvider());
+        this.defaultProvider = new BouncyCastleProvider();
+        Security.addProvider(this.defaultProvider);
         this.keyEncryptionScheme = this.rsaesOaepIdentifier();
         this.cmsEncryptionAlgorithm = CMSAlgorithm.AES256_CBC;
     }
@@ -44,123 +48,100 @@ public class CMSDataKryptering {
         return new AlgorithmIdentifier(PKCSObjectIdentifiers.id_RSAES_OAEP, parameters);
     }
 
-    public byte[] krypterData(byte[] bytes, X509Certificate sertifikat, Provider p) {
-        try {
-            JceKeyTransRecipientInfoGenerator e = (new JceKeyTransRecipientInfoGenerator(sertifikat, this.keyEncryptionScheme)).setProvider(p);
-            CMSEnvelopedDataGenerator envelopedDataGenerator = new CMSEnvelopedDataGenerator();
-            envelopedDataGenerator.addRecipientInfoGenerator(e);
-            OutputEncryptor contentEncryptor = (new JceCMSContentEncryptorBuilder(this.cmsEncryptionAlgorithm)).build();
-            CMSEnvelopedData cmsData = envelopedDataGenerator.generate(new CMSProcessableByteArray(bytes), contentEncryptor);
-            return cmsData.getEncoded();
-        } catch (CertificateEncodingException var7) {
-            throw new RuntimeException("Feil med mottakers sertifikat", var7);
-        } catch (CMSException var8) {
-            throw new RuntimeException("Kunne ikke generere Cryptographic Message Syntax for dokumentpakke", var8);
-        } catch (IOException var9) {
-            throw new RuntimeException(var9);
-        }
-    }
-
-    public byte[] dekrypterData(byte[] data, PrivateKey key, Provider p) {
-
-        byte[] cleardata = null;
-        try {
-            // Initialise parser
-            CMSEnvelopedDataParser envDataParser = new CMSEnvelopedDataParser(data);
-            RecipientInformationStore recipients =  envDataParser.getRecipientInfos();
-
-            RecipientInformation recipient = (RecipientInformation) recipients.getRecipients().iterator().next();
-
-            byte[] envelopedData = recipient.getContent(new JceKeyTransEnvelopedRecipient(key).setProvider(p));
-
-            return envelopedData;
-        } catch(Exception e) { throw new RuntimeException(e);}
-    }
-
     public byte[] krypterData(byte[] bytes, X509Certificate sertifikat) {
-        try {
-            JceKeyTransRecipientInfoGenerator e = (new JceKeyTransRecipientInfoGenerator(sertifikat, this.keyEncryptionScheme)).setProvider("BC");
-            CMSEnvelopedDataGenerator envelopedDataGenerator = new CMSEnvelopedDataGenerator();
-            envelopedDataGenerator.addRecipientInfoGenerator(e);
-            OutputEncryptor contentEncryptor = (new JceCMSContentEncryptorBuilder(this.cmsEncryptionAlgorithm)).build();
+        return krypterData(bytes, sertifikat, defaultProvider);
+    }
 
+    public byte[] krypterData(byte[] bytes, X509Certificate sertifikat, Provider provider) {
+        try {
+            JceKeyTransRecipientInfoGenerator generator = getJceKeyTransRecipientInfoGenerator(sertifikat).setProvider(provider);
+            CMSEnvelopedDataGenerator envelopedDataGenerator = new CMSEnvelopedDataGenerator();
+            envelopedDataGenerator.addRecipientInfoGenerator(generator);
+            OutputEncryptor contentEncryptor = getOutputEncryptor();
             CMSEnvelopedData cmsData = envelopedDataGenerator.generate(new CMSProcessableByteArray(bytes), contentEncryptor);
             return cmsData.getEncoded();
-        } catch (CertificateEncodingException var7) {
-            throw new RuntimeException("Feil med mottakers sertifikat", var7);
-        } catch (CMSException var8) {
-            throw new RuntimeException("Kunne ikke generere Cryptographic Message Syntax for dokumentpakke", var8);
-        } catch (IOException var9) {
-            throw new RuntimeException(var9);
+        } catch (CMSException e) {
+            throw new RuntimeException("Kunne ikke generere Cryptographic Message Syntax for dokumentpakke", e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
     public byte[] dekrypterData(byte[] data, PrivateKey key) {
-        byte[] cleardata = null;
+        return dekrypterData(data, key, defaultProvider);
+    }
+
+    public byte[] dekrypterData(byte[] data, PrivateKey key, Provider provider) {
         try {
-            // Initialise parser
+            JceKeyTransRecipient jceKeyTransRecipient = new JceKeyTransEnvelopedRecipient(key).setProvider(provider);
             CMSEnvelopedDataParser envDataParser = new CMSEnvelopedDataParser(data);
             RecipientInformationStore recipients =  envDataParser.getRecipientInfos();
-
-            RecipientInformation recipient = (RecipientInformation) recipients.getRecipients().iterator().next();
-
-            byte[] envelopedData = recipient.getContent(new JceKeyTransEnvelopedRecipient(key).setProvider("BC"));
-
-            return envelopedData;
-        } catch(Exception e) { throw new RuntimeException(e);}
-    }
-
-    public void krypterData(OutputStream encryptedOutputStream, InputStream inputStream, X509Certificate sertifikat, Provider p) {
-        try {
-            JceKeyTransRecipientInfoGenerator e = (new JceKeyTransRecipientInfoGenerator(sertifikat, this.keyEncryptionScheme)).setProvider(p);
-            CMSEnvelopedDataStreamGenerator envelopedDataGenerator = new CMSEnvelopedDataStreamGenerator();
-
-            envelopedDataGenerator.addRecipientInfoGenerator(e);
-            OutputEncryptor contentEncryptor = (new JceCMSContentEncryptorBuilder(this.cmsEncryptionAlgorithm)).build();
-            try (final OutputStream outputStream = envelopedDataGenerator.open(encryptedOutputStream, contentEncryptor)) {
-                IOUtils.copy(inputStream, outputStream);
-            }
-        } catch (CertificateEncodingException var7) {
-            throw new RuntimeException("Feil med mottakers sertifikat", var7);
-        } catch (CMSException var8) {
-            throw new RuntimeException("Kunne ikke generere Cryptographic Message Syntax for dokumentpakke", var8);
-        } catch (IOException var9) {
-            throw new RuntimeException(var9);
+            RecipientInformation recipient = recipients.getRecipients().iterator().next();
+            return recipient.getContent(jceKeyTransRecipient);
+        } catch (CMSException e) {
+            throw new KrypteringException("Dekryptering av forsendelsesdokumenter feilet", e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
     }
 
-    public OutputStream krypterOutputStream(OutputStream encryptedOutputStream, X509Certificate sertifikat, Provider p) {
-        try {
-            JceKeyTransRecipientInfoGenerator e = (new JceKeyTransRecipientInfoGenerator(sertifikat, this.keyEncryptionScheme)).setProvider(p);
-            CMSEnvelopedDataStreamGenerator envelopedDataGenerator = new CMSEnvelopedDataStreamGenerator();
+    public void krypterData(OutputStream kryptertOutputStream, InputStream inputStream, X509Certificate sertifikat) {
+        krypterData(kryptertOutputStream, inputStream, sertifikat, defaultProvider);
+    }
 
-            envelopedDataGenerator.addRecipientInfoGenerator(e);
-            OutputEncryptor contentEncryptor = (new JceCMSContentEncryptorBuilder(this.cmsEncryptionAlgorithm)).build();
-            return envelopedDataGenerator.open(encryptedOutputStream, contentEncryptor);
-
-        } catch (CertificateEncodingException var7) {
-            throw new RuntimeException("Feil med mottakers sertifikat", var7);
-        } catch (CMSException var8) {
-            throw new RuntimeException("Kunne ikke generere Cryptographic Message Syntax for dokumentpakke", var8);
-        } catch (IOException var9) {
-            throw new RuntimeException(var9);
+    public void krypterData(OutputStream kryptertOutputStream, InputStream inputStream, X509Certificate sertifikat, Provider provider) {
+        try (OutputStream krypteringStream = getKrypteringOutputStream(kryptertOutputStream, sertifikat, provider)) {
+            IOUtils.copy(inputStream, krypteringStream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
     }
 
-    public InputStream dekrypterData(InputStream encryptedStream, PrivateKey key, Provider p) {
+    public OutputStream getKrypteringOutputStream(OutputStream kryptertOutputStream, X509Certificate sertifikat) {
+        return getKrypteringOutputStream(kryptertOutputStream, sertifikat, defaultProvider);
+    }
+
+    public OutputStream getKrypteringOutputStream(OutputStream kryptertOutputStream, X509Certificate sertifikat, Provider provider) {
         try {
-            // Initialise parser
-            CMSEnvelopedDataParser envDataParser = new CMSEnvelopedDataParser(new BufferedInputStream(encryptedStream,1024*1024*1));
+            JceKeyTransRecipientInfoGenerator jceKeyTransRecipientInfoGenerator = getJceKeyTransRecipientInfoGenerator(sertifikat).setProvider(provider);
+            CMSEnvelopedDataStreamGenerator envelopedDataGenerator = new CMSEnvelopedDataStreamGenerator();
+            envelopedDataGenerator.addRecipientInfoGenerator(jceKeyTransRecipientInfoGenerator);
+            OutputEncryptor contentEncryptor = getOutputEncryptor();
+            return envelopedDataGenerator.open(kryptertOutputStream, contentEncryptor);
+        } catch (CMSException e) {
+            throw new RuntimeException("Kunne ikke generere Cryptographic Message Syntax for dokumentpakke", e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public InputStream dekrypterData(InputStream encryptedStream, PrivateKey key) {
+        return dekrypterData(encryptedStream, key, defaultProvider);
+    }
+
+    public InputStream dekrypterData(InputStream encryptedStream, PrivateKey key, Provider provider) {
+        try {
+            CMSEnvelopedDataParser envDataParser = new CMSEnvelopedDataParser(new BufferedInputStream(encryptedStream, 1024 * 1024));
             RecipientInformationStore recipients =  envDataParser.getRecipientInfos();
-
-            RecipientInformation recipient = (RecipientInformation) recipients.getRecipients().iterator().next();
-
-            CMSTypedStream envelopedData = recipient.getContentStream(new JceKeyTransEnvelopedRecipient(key).setProvider(p));
+            RecipientInformation recipient = recipients.getRecipients().iterator().next();
+            CMSTypedStream envelopedData = recipient.getContentStream(new JceKeyTransEnvelopedRecipient(key).setProvider(provider));
             return envelopedData.getContentStream();
         } catch (CMSException e) {
             throw new KrypteringException("Dekryptering av forsendelsesdokumenter feilet", e);
-        } catch (Exception e) { throw new RuntimeException(e);}
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private OutputEncryptor getOutputEncryptor() throws CMSException {
+        return (new JceCMSContentEncryptorBuilder(this.cmsEncryptionAlgorithm)).build();
+    }
+
+    private JceKeyTransRecipientInfoGenerator getJceKeyTransRecipientInfoGenerator(X509Certificate sertifikat) {
+        try {
+            return new JceKeyTransRecipientInfoGenerator(sertifikat, this.keyEncryptionScheme);
+        } catch (CertificateEncodingException e) {
+            throw new RuntimeException("Feil med mottakers sertifikat", e);
+        }
     }
 }

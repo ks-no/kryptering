@@ -7,6 +7,7 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 
+@SuppressWarnings("WeakerAccess")
 public class KSKeyStoreLoader {
 
     private KeyStore keystore;
