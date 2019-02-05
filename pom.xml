@@ -12,7 +12,6 @@
     <groupId>no.ks.fiks</groupId>
     <artifactId>kryptering</artifactId>
     <version>${revision}${changelist}</version>
-    <packaging>pom</packaging>
 
     <name>Kryptering</name>
     <description>Bibliotek for kryptering og dekryptering</description>
@@ -35,6 +34,9 @@
 
         <commons-io.version>2.6</commons-io.version>
         <bouncycastle.version>1.56</bouncycastle.version>
+
+        <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
+        <junit-jupiter.version>5.4.0-M1</junit-jupiter.version>
     </properties>
 
     <dependencies>
@@ -53,6 +55,40 @@
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
