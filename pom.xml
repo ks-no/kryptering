@@ -1,94 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
-    <parent>
-        <groupId>no.ks.fiks.pom</groupId>
-        <artifactId>fiks-ekstern-super-pom</artifactId>
-        <version>0.0.3</version>
-    </parent>
-
-    <groupId>no.ks.fiks</groupId>
-    <artifactId>kryptering</artifactId>
-    <version>${revision}${changelist}</version>
-
-    <name>Kryptering</name>
-    <description>Bibliotek for CMS-kryptering og -dekryptering</description>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>no.ks.fiks.pom</groupId>
+    <artifactId>fiks-ekstern-super-pom</artifactId>
+    <version>0.0.3</version>
+  </parent>
+  <groupId>no.ks.fiks</groupId>
+  <artifactId>kryptering</artifactId>
+  <version>${revision}${changelist}</version>
+  <name>Kryptering</name>
+  <description>Bibliotek for CMS-kryptering og -dekryptering</description>
+  <url>https://github.com/ks-no/kryptering</url>
+  <scm>
+    <connection>scm:git:git@github.com:ks-no/kryptering.git</connection>
+    <developerConnection>scm:git:git@github.com:ks-no/kryptering.git</developerConnection>
     <url>https://github.com/ks-no/kryptering</url>
-
-    <scm>
-        <connection>scm:git:git@github.com:ks-no/kryptering.git</connection>
-        <developerConnection>scm:git:git@github.com:ks-no/kryptering.git</developerConnection>
-        <url>https://github.com/ks-no/kryptering</url>
-    </scm>
-
-    <properties>
-        <changelist>-SNAPSHOT</changelist>
-        <revision>1.0.3</revision>
-
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-
-        <commons-io.version>2.6</commons-io.version>
-        <bouncycastle.version>1.56</bouncycastle.version>
-
-        <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
-        <junit-jupiter.version>5.4.0-M1</junit-jupiter.version>
-    </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
-            <version>${bouncycastle.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk15on</artifactId>
-            <version>${bouncycastle.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit-jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit-jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+  </scm>
+  <properties>
+    <bouncycastle.version>1.56</bouncycastle.version>
+    <commons-io.version>2.6</commons-io.version>
+    <java.version>1.8</java.version>
+    <changelist>-SNAPSHOT</changelist>
+    <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <revision>1.0.4</revision>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <junit-jupiter.version>5.4.0-M1</junit-jupiter.version>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk15on</artifactId>
+      <version>${bouncycastle.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcpkix-jdk15on</artifactId>
+      <version>${bouncycastle.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${commons-io.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>${junit-jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>${junit-jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven-surefire-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
