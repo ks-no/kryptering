@@ -14,7 +14,7 @@
     <version>${revision}${changelist}</version>
 
     <name>Kryptering</name>
-    <description>Bibliotek for kryptering og dekryptering</description>
+    <description>Bibliotek for CMS-kryptering og -dekryptering</description>
     <url>https://github.com/ks-no/kryptering</url>
 
     <scm>
