@@ -27,13 +27,13 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 
 @SuppressWarnings("WeakerAccess")
-public class CMSDataKryptering {
+public class CMSKrypteringImpl implements CMSArrayKryptering, CMSStreamKryptering {
 
     private final Provider defaultProvider;
     private final ASN1ObjectIdentifier cmsEncryptionAlgorithm;
     private final AlgorithmIdentifier keyEncryptionScheme;
 
-    public CMSDataKryptering() {
+    public CMSKrypteringImpl() {
         this.defaultProvider = new BouncyCastleProvider();
         Security.addProvider(this.defaultProvider);
         this.keyEncryptionScheme = this.rsaesOaepIdentifier();
@@ -48,10 +48,12 @@ public class CMSDataKryptering {
         return new AlgorithmIdentifier(PKCSObjectIdentifiers.id_RSAES_OAEP, parameters);
     }
 
+    @Override
     public byte[] krypterData(byte[] bytes, X509Certificate sertifikat) {
         return krypterData(bytes, sertifikat, defaultProvider);
     }
 
+    @Override
     public byte[] krypterData(byte[] bytes, X509Certificate sertifikat, Provider provider) {
         try {
             JceKeyTransRecipientInfoGenerator generator = getJceKeyTransRecipientInfoGenerator(sertifikat).setProvider(provider);
@@ -67,10 +69,12 @@ public class CMSDataKryptering {
         }
     }
 
+    @Override
     public byte[] dekrypterData(byte[] data, PrivateKey key) {
         return dekrypterData(data, key, defaultProvider);
     }
 
+    @Override
     public byte[] dekrypterData(byte[] data, PrivateKey key, Provider provider) {
         try {
             JceKeyTransRecipient jceKeyTransRecipient = new JceKeyTransEnvelopedRecipient(key).setProvider(provider);
@@ -85,10 +89,12 @@ public class CMSDataKryptering {
         }
     }
 
+    @Override
     public void krypterData(OutputStream kryptertOutputStream, InputStream inputStream, X509Certificate sertifikat) {
         krypterData(kryptertOutputStream, inputStream, sertifikat, defaultProvider);
     }
 
+    @Override
     public void krypterData(OutputStream kryptertOutputStream, InputStream inputStream, X509Certificate sertifikat, Provider provider) {
         try (OutputStream krypteringStream = getKrypteringOutputStream(kryptertOutputStream, sertifikat, provider)) {
             IOUtils.copy(inputStream, krypteringStream);
@@ -97,10 +103,12 @@ public class CMSDataKryptering {
         }
     }
 
+    @Override
     public OutputStream getKrypteringOutputStream(OutputStream kryptertOutputStream, X509Certificate sertifikat) {
         return getKrypteringOutputStream(kryptertOutputStream, sertifikat, defaultProvider);
     }
 
+    @Override
     public OutputStream getKrypteringOutputStream(OutputStream kryptertOutputStream, X509Certificate sertifikat, Provider provider) {
         try {
             JceKeyTransRecipientInfoGenerator jceKeyTransRecipientInfoGenerator = getJceKeyTransRecipientInfoGenerator(sertifikat).setProvider(provider);
@@ -115,10 +123,12 @@ public class CMSDataKryptering {
         }
     }
 
+    @Override
     public InputStream dekrypterData(InputStream encryptedStream, PrivateKey key) {
         return dekrypterData(encryptedStream, key, defaultProvider);
     }
 
+    @Override
     public InputStream dekrypterData(InputStream encryptedStream, PrivateKey key, Provider provider) {
         try {
             CMSEnvelopedDataParser envDataParser = new CMSEnvelopedDataParser(new BufferedInputStream(encryptedStream, 1024 * 1024));

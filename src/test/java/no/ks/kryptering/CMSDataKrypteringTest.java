@@ -32,7 +32,7 @@ class CMSDataKrypteringTest {
     @Test
     @DisplayName("Kryptering og dekryptering av byte array")
     void krypterDekrypterArray() {
-        CMSDataKryptering kryptering = new CMSDataKryptering();
+        CMSKrypteringImpl kryptering = new CMSKrypteringImpl();
 
         byte[] data = getRandomBytes();
 
@@ -46,7 +46,7 @@ class CMSDataKrypteringTest {
     @Test
     @DisplayName("Kryptering og dekryptering av byte array med spesifisert provider")
     void krypterDekrypterArrayProvider() {
-        CMSDataKryptering kryptering = new CMSDataKryptering();
+        CMSKrypteringImpl kryptering = new CMSKrypteringImpl();
 
         byte[] data = getRandomBytes();
 
@@ -60,7 +60,7 @@ class CMSDataKrypteringTest {
     @Test
     @DisplayName("Kryptering og dekryptering av stream")
     void krypterDekrypterStream() throws IOException, InterruptedException, TimeoutException, ExecutionException {
-        CMSDataKryptering kryptering = new CMSDataKryptering();
+        CMSKrypteringImpl kryptering = new CMSKrypteringImpl();
 
         byte[] data = getRandomBytes();
 
@@ -86,7 +86,7 @@ class CMSDataKrypteringTest {
     @Test
     @DisplayName("Kryptering og dekryptering av stream med spesifisert provider")
     void krypterDekrypterStreamProvider() throws IOException, InterruptedException, TimeoutException, ExecutionException {
-        CMSDataKryptering kryptering = new CMSDataKryptering();
+        CMSKrypteringImpl kryptering = new CMSKrypteringImpl();
 
         byte[] data = getRandomBytes();
 
@@ -112,7 +112,7 @@ class CMSDataKrypteringTest {
     @Test
     @DisplayName("Get kryptering stream, skriv data og dekrypter")
     void getKrypteringOutputStream() throws IOException, InterruptedException, TimeoutException, ExecutionException {
-        CMSDataKryptering kryptering = new CMSDataKryptering();
+        CMSKrypteringImpl kryptering = new CMSKrypteringImpl();
 
         byte[] data = getRandomBytes();
 
@@ -140,7 +140,7 @@ class CMSDataKrypteringTest {
     @Test
     @DisplayName("Get kryptering stream, skriv data og dekrypter med spesifisert provider")
     void getKrypteringOutputStreamProvider() throws IOException, InterruptedException, TimeoutException, ExecutionException {
-        CMSDataKryptering kryptering = new CMSDataKryptering();
+        CMSKrypteringImpl kryptering = new CMSKrypteringImpl();
 
         byte[] data = getRandomBytes();
 
@@ -168,7 +168,7 @@ class CMSDataKrypteringTest {
     @Test
     @DisplayName("Kryptering som stream og dekryptering som array")
     void krypterStreamDekrypterArray() throws IOException, InterruptedException, ExecutionException, TimeoutException {
-        CMSDataKryptering kryptering = new CMSDataKryptering();
+        CMSKrypteringImpl kryptering = new CMSKrypteringImpl();
 
         byte[] data = getRandomBytes();
 
@@ -194,7 +194,7 @@ class CMSDataKrypteringTest {
     @Test
     @DisplayName("Kryptering som array og dekryptering som stream")
     void krypterArrayDekrypterStream() throws IOException {
-        CMSDataKryptering kryptering = new CMSDataKryptering();
+        CMSKrypteringImpl kryptering = new CMSKrypteringImpl();
 
         byte[] data = getRandomBytes();
 
