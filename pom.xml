@@ -31,7 +31,7 @@
     <revision>1.0.6</revision>
     <logback.version>1.2.3</logback.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
-    <junit-jupiter.version>5.4.0-M1</junit-jupiter.version>
+    <junit-jupiter.version>5.5.0-M1</junit-jupiter.version>
   </properties>
   <dependencies>
     <dependency>
