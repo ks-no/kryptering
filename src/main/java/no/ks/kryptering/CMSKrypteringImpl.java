@@ -33,6 +33,10 @@ public class CMSKrypteringImpl implements CMSArrayKryptering, CMSStreamKrypterin
     private final ASN1ObjectIdentifier cmsEncryptionAlgorithm;
     private final AlgorithmIdentifier keyEncryptionScheme;
 
+    /**
+     * OBS! Relativt kostbar operasjon. Ikke opprett en ny instans av denne hver gang den skal brukes, da dette kan føre til minnelekkasje grunnet bug i JDK:
+     * https://bugs.openjdk.java.net/browse/JDK-8168469
+     */
     public CMSKrypteringImpl() {
         this.defaultProvider = new BouncyCastleProvider();
         Security.addProvider(this.defaultProvider);
