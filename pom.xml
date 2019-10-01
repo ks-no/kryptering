@@ -19,6 +19,7 @@
     <url>https://github.com/ks-no/kryptering</url>
   </scm>
   <properties>
+    <junit-platform.version>1.5.2</junit-platform.version>
     <bouncycastle.version>1.63</bouncycastle.version>
     <commons-io.version>2.6</commons-io.version>
     <slf4j.version>1.7.28</slf4j.version>
@@ -28,11 +29,10 @@
     <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <revision>1.0.6</revision>
     <logback.version>1.2.3</logback.version>
+    <revision>1.0.8</revision>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <junit-jupiter.version>5.5.2</junit-jupiter.version>
-    <junit-platform.version>1.5.2</junit-platform.version>
   </properties>
   <dependencies>
     <dependency>
@@ -67,7 +67,6 @@
       <version>${junit-jupiter.version}</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-core</artifactId>
