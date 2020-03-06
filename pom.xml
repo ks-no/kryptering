@@ -20,7 +20,7 @@
   </scm>
   <properties>
     <junit-platform.version>1.6.0</junit-platform.version>
-    <bouncycastle.version>1.63</bouncycastle.version>
+    <bouncycastle.version>1.64</bouncycastle.version>
     <commons-io.version>2.6</commons-io.version>
     <slf4j.version>1.7.30</slf4j.version>
     <java.version>1.8</java.version>
