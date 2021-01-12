@@ -2,6 +2,8 @@ package no.ks.kryptering;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
 
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
@@ -52,6 +54,7 @@ class KSKeyStoreLoaderTest {
     }
 
     @Test
+    @EnabledOnJre(JRE.JAVA_8)
     @DisplayName("Dersom feil type er oppgitt ved lasting av keystore skal en exception kastes")
     void testLoadKeystoreFeilType() {
         RuntimeException exception = assertThrows(RuntimeException.class, () ->
