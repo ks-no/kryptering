@@ -20,6 +20,14 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.Security;
@@ -29,6 +37,7 @@ import java.security.cert.X509Certificate;
 @SuppressWarnings("WeakerAccess")
 public class CMSKrypteringImpl implements CMSArrayKryptering, CMSStreamKryptering {
 
+    private static final int DEFAULT_BUFFER_SIZE = 8192;
     private final Provider defaultProvider;
     private final ASN1ObjectIdentifier cmsEncryptionAlgorithm;
     private final AlgorithmIdentifier keyEncryptionScheme;
@@ -100,8 +109,16 @@ public class CMSKrypteringImpl implements CMSArrayKryptering, CMSStreamKrypterin
 
     @Override
     public void krypterData(OutputStream kryptertOutputStream, InputStream inputStream, X509Certificate sertifikat, Provider provider) {
-        try (OutputStream krypteringStream = getKrypteringOutputStream(kryptertOutputStream, sertifikat, provider)) {
-            IOUtils.copy(inputStream, krypteringStream);
+        try (OutputStream krypteringStream = getKrypteringOutputStream(kryptertOutputStream, sertifikat, provider);
+             final ReadableByteChannel inputChannel = Channels.newChannel(inputStream);
+             final WritableByteChannel outputChannel = Channels.newChannel(krypteringStream)) {
+
+             final ByteBuffer buffer = ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE);
+             while(inputChannel.read(buffer) != -1 || buffer.position() > 0) {
+                 ((Buffer) buffer).flip();
+                 outputChannel.write(buffer);
+                 buffer.compact();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
