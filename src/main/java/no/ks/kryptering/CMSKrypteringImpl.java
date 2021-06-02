@@ -1,6 +1,5 @@
 package no.ks.kryptering;
 
-import org.apache.commons.io.IOUtils;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.DERNull;
 import org.bouncycastle.asn1.DEROctetString;
@@ -23,11 +22,8 @@ import java.io.OutputStream;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.Security;
@@ -109,12 +105,12 @@ public class CMSKrypteringImpl implements CMSArrayKryptering, CMSStreamKrypterin
 
     @Override
     public void krypterData(OutputStream kryptertOutputStream, InputStream inputStream, X509Certificate sertifikat, Provider provider) {
-        try (OutputStream krypteringStream = getKrypteringOutputStream(kryptertOutputStream, sertifikat, provider);
-             final ReadableByteChannel inputChannel = Channels.newChannel(inputStream);
+        OutputStream krypteringStream = getKrypteringOutputStream(kryptertOutputStream, sertifikat, provider);
+        try (final ReadableByteChannel inputChannel = Channels.newChannel(inputStream);
              final WritableByteChannel outputChannel = Channels.newChannel(krypteringStream)) {
 
              final ByteBuffer buffer = ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE);
-             while(inputChannel.read(buffer) != -1 || buffer.position() > 0) {
+             while(inputChannel.read(buffer) >= 0 || buffer.position() != 0) {
                  ((Buffer) buffer).flip();
                  outputChannel.write(buffer);
                  buffer.compact();
