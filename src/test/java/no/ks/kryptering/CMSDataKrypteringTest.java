@@ -6,6 +6,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.cert.X509Certificate;
@@ -203,6 +207,21 @@ class CMSDataKrypteringTest {
 
         assertFalse(Arrays.equals(data, kryptertData));
         assertTrue(IOUtils.contentEquals(new ByteArrayInputStream(data), dekryptertData));
+    }
+
+    @Test
+    @DisplayName("Kryptering som array eller stream skal være like")
+    void krypterArrayOgStream() {
+        CMSKrypteringImpl kryptering = new CMSKrypteringImpl();
+
+        byte[] data = getRandomBytes();
+        byte[] kryptertData = kryptering.krypterData(data, PUBLIC_KEY, BC_PROVIDER);
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
+        kryptering.krypterData(byteArrayOutputStream, byteArrayInputStream, PUBLIC_KEY, BC_PROVIDER);
+
+        assertTrue(kryptertData.length == byteArrayOutputStream.size());
     }
 
     private byte[] getRandomBytes() {
