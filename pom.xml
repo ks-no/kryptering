@@ -26,7 +26,7 @@
     <revision>1.0.14</revision>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <junit-jupiter.version>5.7.2</junit-jupiter.version>
-    <slf4j.version>1.7.30</slf4j.version>
+    <slf4j.version>1.7.31</slf4j.version>
     <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
     <changelist>-SNAPSHOT</changelist>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
