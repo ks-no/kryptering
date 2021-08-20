@@ -105,9 +105,8 @@ public class CMSKrypteringImpl implements CMSArrayKryptering, CMSStreamKrypterin
 
     @Override
     public void krypterData(OutputStream kryptertOutputStream, InputStream inputStream, X509Certificate sertifikat, Provider provider) {
-        try (final ReadableByteChannel inputChannel = Channels.newChannel(inputStream);
-             final WritableByteChannel outputChannel = Channels.newChannel(
-                     getKrypteringOutputStream(kryptertOutputStream, sertifikat, provider))) {
+        final ReadableByteChannel inputChannel = Channels.newChannel(inputStream);
+        try (final WritableByteChannel outputChannel = Channels.newChannel(getKrypteringOutputStream(kryptertOutputStream, sertifikat, provider))) {
 
              final ByteBuffer buffer = ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE);
              while(inputChannel.read(buffer) >= 0 || buffer.position() != 0) {
