@@ -19,13 +19,13 @@
     <url>https://github.com/ks-no/kryptering</url>
   </scm>
   <properties>
-    <bouncycastle.version>1.70</bouncycastle.version>
+    <bouncycastle.version>1.71.1</bouncycastle.version>
     <java.version>1.8</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <hamcrest.version>2.2</hamcrest.version>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <junit-jupiter.version>5.9.0</junit-jupiter.version>
-    <slf4j.version>2.0.0</slf4j.version>
+    <slf4j.version>1.7.36</slf4j.version>
     <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <commons-io.version>2.11.0</commons-io.version>
@@ -34,12 +34,12 @@
   <dependencies>
     <dependency>
       <groupId>org.bouncycastle</groupId>
-      <artifactId>bcprov-jdk15on</artifactId>
+      <artifactId>bcprov-jdk18on</artifactId>
       <version>${bouncycastle.version}</version>
     </dependency>
     <dependency>
       <groupId>org.bouncycastle</groupId>
-      <artifactId>bcpkix-jdk15on</artifactId>
+      <artifactId>bcpkix-jdk18on</artifactId>
       <version>${bouncycastle.version}</version>
     </dependency>
     <dependency>
