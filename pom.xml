@@ -19,7 +19,7 @@
     <url>https://github.com/ks-no/kryptering</url>
   </scm>
   <properties>
-    <bouncycastle.version>1.71.1</bouncycastle.version>
+    <bouncycastle.version>1.72</bouncycastle.version>
     <java.version>1.8</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <hamcrest.version>2.2</hamcrest.version>
