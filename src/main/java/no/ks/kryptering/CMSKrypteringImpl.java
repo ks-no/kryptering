@@ -88,7 +88,7 @@ public class CMSKrypteringImpl implements CMSArrayKryptering, CMSStreamKrypterin
         try {
             JceKeyTransRecipient jceKeyTransRecipient = new JceKeyTransEnvelopedRecipient(key).setProvider(provider);
             CMSEnvelopedDataParser envDataParser = new CMSEnvelopedDataParser(data);
-            RecipientInformationStore recipients =  envDataParser.getRecipientInfos();
+            RecipientInformationStore recipients = envDataParser.getRecipientInfos();
             RecipientInformation recipient = recipients.getRecipients().iterator().next();
             return recipient.getContent(jceKeyTransRecipient);
         } catch (CMSException e) {
@@ -105,14 +105,14 @@ public class CMSKrypteringImpl implements CMSArrayKryptering, CMSStreamKrypterin
 
     @Override
     public void krypterData(OutputStream kryptertOutputStream, InputStream inputStream, X509Certificate sertifikat, Provider provider) {
-        final ReadableByteChannel inputChannel = Channels.newChannel(inputStream);
-        try (final WritableByteChannel outputChannel = Channels.newChannel(getKrypteringOutputStream(kryptertOutputStream, sertifikat, provider))) {
+        try (final ReadableByteChannel inputChannel = Channels.newChannel(inputStream);
+             final WritableByteChannel outputChannel = Channels.newChannel(getKrypteringOutputStream(kryptertOutputStream, sertifikat, provider))) {
 
-             final ByteBuffer buffer = ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE);
-             while(inputChannel.read(buffer) >= 0 || buffer.position() != 0) {
-                 ((Buffer) buffer).flip();
-                 outputChannel.write(buffer);
-                 buffer.compact();
+            final ByteBuffer buffer = ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE);
+            while (inputChannel.read(buffer) >= 0 || buffer.position() != 0) {
+                ((Buffer) buffer).flip();
+                outputChannel.write(buffer);
+                buffer.compact();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -148,7 +148,7 @@ public class CMSKrypteringImpl implements CMSArrayKryptering, CMSStreamKrypterin
     public InputStream dekrypterData(InputStream encryptedStream, PrivateKey key, Provider provider) {
         try {
             CMSEnvelopedDataParser envDataParser = new CMSEnvelopedDataParser(new BufferedInputStream(encryptedStream, 1024 * 1024));
-            RecipientInformationStore recipients =  envDataParser.getRecipientInfos();
+            RecipientInformationStore recipients = envDataParser.getRecipientInfos();
             RecipientInformation recipient = recipients.getRecipients().iterator().next();
             CMSTypedStream envelopedData = recipient.getContentStream(new JceKeyTransEnvelopedRecipient(key).setProvider(provider));
             return envelopedData.getContentStream();
