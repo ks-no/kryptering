@@ -30,7 +30,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <bouncycastle.version>1.78.1</bouncycastle.version>
-    <commons-io.version>2.16.1</commons-io.version>
+    <commons-io.version>2.17.0</commons-io.version>
 
     <hamcrest.version>3.0</hamcrest.version>
     <junit-jupiter.version>5.11.0</junit-jupiter.version>
