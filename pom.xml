@@ -29,7 +29,7 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <bouncycastle.version>1.78.1</bouncycastle.version>
+    <bouncycastle.version>1.79</bouncycastle.version>
     <commons-io.version>2.16.1</commons-io.version>
 
     <hamcrest.version>3.0</hamcrest.version>
