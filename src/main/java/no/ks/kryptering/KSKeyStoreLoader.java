@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Collections;
 
 @SuppressWarnings("WeakerAccess")
 public class KSKeyStoreLoader {
@@ -41,7 +42,7 @@ public class KSKeyStoreLoader {
 
             keystore = KeyStore.getInstance(keystoreType);
             keystore.load(keystoreStream, password);
-            log.info("\"{}\" keystore \"{}\" lastet med {} aliases", keystoreType, keystorePath, keystore.size());
+            log.info("\"{}\" keystore \"{}\" lastet med {} aliases: {}", keystoreType, keystorePath, keystore.size(), Collections.list(keystore.aliases()));
         } catch (IOException | CertificateException | NoSuchAlgorithmException | KeyStoreException e) {
             throw new RuntimeException(e);
         }
