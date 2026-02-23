@@ -33,7 +33,7 @@
     <commons-io.version>2.21.0</commons-io.version>
 
     <hamcrest.version>3.0</hamcrest.version>
-    <junit-jupiter.version>6.0.2</junit-jupiter.version>
+    <junit-jupiter.version>6.0.3</junit-jupiter.version>
 
     <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
   </properties>
