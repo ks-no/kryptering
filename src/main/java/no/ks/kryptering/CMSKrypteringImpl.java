@@ -120,6 +120,20 @@ public class CMSKrypteringImpl implements CMSArrayKryptering, CMSStreamKrypterin
     }
 
     @Override
+    public void krypterData(OutputStream kryptertOutputStream, PlaintextWriter writer, X509Certificate sertifikat) {
+        krypterData(kryptertOutputStream, writer, sertifikat, defaultProvider);
+    }
+
+    @Override
+    public void krypterData(OutputStream kryptertOutputStream, PlaintextWriter writer, X509Certificate sertifikat, Provider provider) {
+        try (OutputStream encryptionOut = getKrypteringOutputStream(kryptertOutputStream, sertifikat, provider)) {
+            writer.writeTo(encryptionOut);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public OutputStream getKrypteringOutputStream(OutputStream kryptertOutputStream, X509Certificate sertifikat) {
         return getKrypteringOutputStream(kryptertOutputStream, sertifikat, defaultProvider);
     }

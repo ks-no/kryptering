@@ -88,6 +88,22 @@ class CMSDataKrypteringTest {
     }
 
     @Test
+    @DisplayName("Kryptering og dekryptering av stream med writer")
+    void krypterDekrypterStreamMedWriter() throws IOException {
+        CMSKrypteringImpl kryptering = new CMSKrypteringImpl();
+
+        byte[] data = getRandomBytes();
+        ByteArrayOutputStream kryptertOutput = new ByteArrayOutputStream();
+        kryptering.krypterData(kryptertOutput, outputForKryptering -> outputForKryptering.write(data), PUBLIC_KEY);
+
+        byte[] kryptertData = kryptertOutput.toByteArray();
+        InputStream dekryptertData = kryptering.dekrypterData(new ByteArrayInputStream(kryptertData), PRIVATE_KEY);
+
+        assertFalse(Arrays.equals(data, kryptertData));
+        assertTrue(IOUtils.contentEquals(new ByteArrayInputStream(data), dekryptertData));
+    }
+
+    @Test
     @DisplayName("Kryptering og dekryptering av stream med spesifisert provider")
     void krypterDekrypterStreamProvider() throws IOException, InterruptedException, TimeoutException, ExecutionException {
         CMSKrypteringImpl kryptering = new CMSKrypteringImpl();
@@ -111,6 +127,22 @@ class CMSDataKrypteringTest {
         assertFalse(Arrays.equals(data, kryptertData));
         assertTrue(IOUtils.contentEquals(new ByteArrayInputStream(data), dekryptertData));
         future.get(1, TimeUnit.SECONDS);
+    }
+
+    @Test
+    @DisplayName("Kryptering og dekryptering av stream med writer og spesifisert provider")
+    void krypterDekrypterStreamProviderMedWriter() throws IOException {
+        CMSKrypteringImpl kryptering = new CMSKrypteringImpl();
+
+        byte[] data = getRandomBytes();
+        ByteArrayOutputStream kryptertOutput = new ByteArrayOutputStream();
+        kryptering.krypterData(kryptertOutput, outputForKryptering -> outputForKryptering.write(data), PUBLIC_KEY, BC_PROVIDER);
+
+        byte[] kryptertData = kryptertOutput.toByteArray();
+        InputStream dekryptertData = kryptering.dekrypterData(new ByteArrayInputStream(kryptertData), PRIVATE_KEY, BC_PROVIDER);
+
+        assertFalse(Arrays.equals(data, kryptertData));
+        assertTrue(IOUtils.contentEquals(new ByteArrayInputStream(data), dekryptertData));
     }
 
     @Test
